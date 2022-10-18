@@ -8,7 +8,15 @@ import (
 
 // CaptureDisplay captures whole region of displayIndex'th display.
 func CaptureDisplay(displayIndex int) (*image.RGBA, error) {
-	rect := GetDisplayBounds(displayIndex)
+	var retries int
+	var rect image.Rectangle
+	for retries < 3 {
+		rect = GetDisplayBounds(displayIndex)
+		if rect.Dx() != 0 {
+			break
+		}
+		retries++
+	}
 	return CaptureRect(rect)
 }
 
